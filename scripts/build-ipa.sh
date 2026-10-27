@@ -43,7 +43,7 @@ if [ "${#SOURCES[@]}" -eq 0 ]; then
 fi
 echo "    源文件: ${#SOURCES[@]} 个"
 
-echo "==> 编译（arm64 / iOS $MIN_IOS）"
+echo "==> 编译（arm64 / iOS ${MIN_IOS}）"
 xcrun --sdk iphoneos swiftc \
   -sdk "$SDK_PATH" \
   -F "$SDK_PATH/System/Library/Frameworks" \
