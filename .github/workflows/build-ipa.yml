@@ -1,0 +1,43 @@
+name: Build IPA
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, master]
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Toolchain
+        run: |
+          xcodebuild -version
+          xcrun --sdk iphoneos --show-sdk-path
+          sw_vers
+
+      - name: Build unsigned ipa
+        run: bash scripts/build-ipa.sh
+
+      - name: Inspect bundle
+        if: always()
+        run: |
+          echo "--- build tree ---"
+          find build -maxdepth 2 2>/dev/null || true
+          echo "--- Info.plist ---"
+          plutil -p build/AspectLab.app/Info.plist 2>/dev/null || true
+          echo "--- binary ---"
+          file build/AspectLab.app/AspectLab 2>/dev/null || true
+          ls -la build/AspectLab.app 2>/dev/null || true
+
+      - name: Upload ipa
+        uses: actions/upload-artifact@v4
+        with:
+          name: AspectLab-ipa
+          path: build/AspectLab-unsigned.ipa
+          if-no-files-found: error
+          retention-days: 30
