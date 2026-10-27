@@ -87,4 +87,4 @@ echo "完成: $IPA_PATH  ($SIZE)"
 echo "未签名。用 SideStore / AltStore / Sideloadly 以自己的证书重签后再安装。"
 echo ""
 echo "校验:"
-unzip -l "$IPA_PATH" | head -20
+unzip -l "$IPA_PATH" | sed -n '1,24p' || true
